@@ -30,17 +30,16 @@ for _, row in posts_df.iterrows():
         VALUES (%s, %s, %s, %s, %s, %s)
         RETURNING id;
     """, (
-        "No text provided",          # because your CSV has no text column
-        row["hashtags_count"],       # storing hashtag count instead of text
-        row["sentiment"],
-        row["word_count"],
-        row["char_count"],
-        row["predicted_engagement"]
+        "No text provided",
+        int(row["hashtags_count"]),
+        float(row["sentiment"]),
+        int(row["word_count"]),
+        int(row["char_count"]),
+        float(row["predicted_engagement"])
     ))
 
     post_id = cursor.fetchone()[0]
 
-    # Insert audience rows for each post
     for _, a_row in audience_df.iterrows():
         cursor.execute("""
             INSERT INTO audience (post_id, name, role, seniority, company_type, relevance_score)
@@ -51,8 +50,9 @@ for _, row in posts_df.iterrows():
             a_row["role"],
             a_row["seniority"],
             a_row["company_type"],
-            a_row["relevance_score"]
+            int(a_row["relevance_score"])
         ))
+
 
 conn.commit()
 cursor.close()
