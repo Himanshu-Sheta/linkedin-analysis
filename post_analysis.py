@@ -14,12 +14,17 @@ audience_df = pd.read_csv("audience_analysis.csv")
 print("Posts CSV Columns:", posts_df.columns.tolist())
 print("Audience CSV Columns:", audience_df.columns.tolist())
 
+
+
 # -----------------------------
 # 2. Connect to PostgreSQL
 # -----------------------------
 conn = get_connection()
 cursor = conn.cursor()
 
+# TEMPORARY: Reset tables to fix schema mismatch 
+cursor.execute("DROP TABLE IF EXISTS audience CASCADE;") 
+cursor.execute("DROP TABLE IF EXISTS posts CASCADE;")
 # Create tables if missing
 create_tables(cursor)
 conn.commit()
@@ -55,7 +60,7 @@ for _, row in posts_df.iterrows():
             a_row["company_type"],
             a_row["relevance_score"]
         ))
-        
+
 conn.commit()
 cursor.close()
 conn.close()
