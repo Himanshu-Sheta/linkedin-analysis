@@ -1,13 +1,28 @@
 name: Daily LinkedIn Analysis
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 9 * * *"
-  workflow_dispatch:
 
 jobs:
   run:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 1234
+          POSTGRES_DB: linkedin
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
       - uses: actions/checkout@v3
@@ -25,8 +40,8 @@ jobs:
 
       - name: Run analysis
         env:
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: localhost
+          DB_NAME: linkedin
+          DB_USER: postgres
+          DB_PASSWORD: 1234
         run: python post_analysis.py

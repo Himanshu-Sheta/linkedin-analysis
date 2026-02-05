@@ -1,9 +1,11 @@
+import os
 import psycopg2
 
 def get_connection():
     return psycopg2.connect(
-        host="localhost",
-        database="testdb",   # use your real DB name
-        user="postgres",
-        password="1234"        # your real password
+        host=os.getenv("DB_HOST", "localhost"),
+        database=os.getenv("DB_NAME", "linkedin"),
+        user=os.getenv("DB_USER", "postgres"),
+        password=os.getenv("DB_PASSWORD", "1234"),
+        port=5432
     )
