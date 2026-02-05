@@ -5,7 +5,7 @@ from db import get_connection, create_tables
 # -----------------------------
 # 1. Load your CSVs
 # -----------------------------
-posts_df = pd.read_csv("post_analysis.csv")
+posts_df = pd.read_csv("linkedin_posts.csv")
 audience_df = pd.read_csv("audience_analysis.csv")
 
 print("Posts CSV Columns:", posts_df.columns.tolist())
