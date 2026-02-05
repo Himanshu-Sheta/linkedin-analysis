@@ -8,6 +8,9 @@ from db import get_connection, create_tables
 posts_df = pd.read_csv("linkedin_posts.csv")
 audience_df = pd.read_csv("audience_analysis.csv")
 
+
+# Convert all NumPy types to Python native types posts_df = posts_df.astype(object).where(pd.notnull(posts_df), None) audience_df = audience_df.astype(object).where(pd.notnull(audience_df), None)
+
 print("Posts CSV Columns:", posts_df.columns.tolist())
 print("Audience CSV Columns:", audience_df.columns.tolist())
 
@@ -31,11 +34,11 @@ for _, row in posts_df.iterrows():
         RETURNING id;
     """, (
         "No text provided",
-        int(row["hashtags_count"]),
-        float(row["sentiment"]),
-        int(row["word_count"]),
-        int(row["char_count"]),
-        float(row["predicted_engagement"])
+        row["hashtags_count"],
+        row["sentiment"],
+        row["word_count"],
+        row["char_count"],
+        row["predicted_engagement"]
     ))
 
     post_id = cursor.fetchone()[0]
@@ -50,10 +53,9 @@ for _, row in posts_df.iterrows():
             a_row["role"],
             a_row["seniority"],
             a_row["company_type"],
-            int(a_row["relevance_score"])
+            a_row["relevance_score"]
         ))
-
-
+        
 conn.commit()
 cursor.close()
 conn.close()
