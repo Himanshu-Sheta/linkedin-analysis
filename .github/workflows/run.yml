@@ -38,10 +38,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run analysis
-        env:
-          DB_HOST: localhost
-          DB_NAME: linkedin
-          DB_USER: postgres
-          DB_PASSWORD: 1234
-        run: python post_analysis.py
+      - name: Run post analysis
+        run: python scripts/post_analysis.py
+
+      - name: Run comment processing
+        run: python scripts/comment_processing.py
+
+      - name: Run audience analysis
+        run: python scripts/audience_analysis.py
